@@ -1,4 +1,4 @@
-package org.example;
+package org.example.dto;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.example.utils.TextUtils;
@@ -25,11 +25,11 @@ public record VideoGame(
         }
         return "Title: " + this.title
                 + "\n\tDeveloper: " + this.developer
-                + "\n\tPlatforms: " + TextUtils.getCollectionAsPrettyString(this.platforms)
-                + "\n\tGenres: " + TextUtils.getCollectionAsPrettyString(this.genres)
+                + "\n\tPlatforms: " + TextUtils.getAsPrettyString(this.platforms)
+                + "\n\tGenres: " + TextUtils.getAsPrettyString(this.genres)
                 + "\n\tEstimated length: " + this.estimatedHours + " hrs"
                 + "\n\tRelease date: " + this.releaseDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-                + "\n\tNominations: " + (CollectionUtils.isEmpty(this.nominations) ? "None" : TextUtils.getCollectionAsPrettyList(this.nominations, 2))
+                + "\n\tNominations: " + (CollectionUtils.isEmpty(this.nominations) ? "None" : TextUtils.getAsPrettyListString(this.nominations, 2))
                 + "\n\tMultiplayer: " + (this.multiplayer ? "Yes" : "No")
                 + "\n";
     }

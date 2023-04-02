@@ -10,31 +10,23 @@ import java.util.Objects;
 
 public class TextUtils {
 
-    public static String getCollectionAsPrettyString(final Collection<?> collection) {
-        return buildCollectionString(collection).toString();
-    }
-
-    public static String getCollectionAsPrettyList(final Collection<?> collection, final int indents) {
-        return buildCollectionList(collection, indents).toString();
-    }
-
-    private static StringBuilder buildCollectionString(final Collection<?> collection) {
+    public static <T> String getAsPrettyString(final Collection<T> collection) {
         StringBuilder result = new StringBuilder();
         if (CollectionUtils.isEmpty(collection)) {
-            return result;
+            return StringUtils.EMPTY;
         }
         boolean firstElement = true;
-        for (final Object element : collection) {
+        for (final T element : collection) {
             if (Objects.isNull(element)) {
                 continue;
             }
             addElement(result, element, firstElement);
             firstElement = false;
         }
-        return result;
+        return result.toString();
     }
 
-    private static void addElement(final StringBuilder stringBuilder, final Object element, final boolean firstElement) {
+    private static <T> void addElement(final StringBuilder stringBuilder, final T element, final boolean firstElement) {
         if (BooleanUtils.isFalse(firstElement)) {
             stringBuilder.append(" | ");
         }
@@ -45,12 +37,12 @@ public class TextUtils {
         }
     }
 
-    private static StringBuilder buildCollectionList(final Collection<?> collection, final int indents) {
+    public static <T> String getAsPrettyListString(final Collection<T> collection, final int indents) {
         StringBuilder result = new StringBuilder();
         if (CollectionUtils.isEmpty(collection)) {
-            return result;
+            return StringUtils.EMPTY;
         }
-        for (final Object element : collection) {
+        for (final T element : collection) {
             if (Objects.isNull(element)) {
                 continue;
             }
@@ -58,6 +50,6 @@ public class TextUtils {
             result.append("\t".repeat(Math.max(0, indents)));
             result.append(element);
         }
-        return result;
+        return result.toString();
     }
 }

@@ -1,4 +1,4 @@
-package org.example;
+package org.example.dto;
 
 import org.apache.commons.lang3.StringUtils;
 

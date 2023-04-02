@@ -4,7 +4,7 @@
 
 This is a didactic project with some exercises for practicing the use of declarative programming in Java 8+.
 
-The following requirements are requests to a [`VideoGame`](/src/main/java/org/example/VideoGame.java) DB, which is
+The following requirements are requests to a [`VideoGame`](/src/main/java/org/example/dto/VideoGame.java) DB, which is
 implemented as a List in
 [`VideoGameRepository`](/src/main/java/org/example/VideoGameRepository.java) class in order to keep it simple.
 

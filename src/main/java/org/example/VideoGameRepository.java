@@ -1,7 +1,9 @@
 package org.example;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.stereotype.Repository;
+import org.example.dto.Genre;
+import org.example.dto.Nomination;
+import org.example.dto.VideoGame;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -10,11 +12,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-@Repository
 public class VideoGameRepository {
 
     private final List<VideoGame> videoGames;
@@ -35,7 +35,7 @@ public class VideoGameRepository {
         return this.videoGames;
     }
 
-    public Optional<VideoGame> getByTitle(String title) {
+    public VideoGame getByTitle(String title) {
         VideoGame result = null;
         for (VideoGame videoGame : this.videoGames) {
             if (title.equalsIgnoreCase(videoGame.title())) {
@@ -43,7 +43,7 @@ public class VideoGameRepository {
                 break;
             }
         }
-        return Optional.ofNullable(result);
+        return result;
     }
 
     public List<VideoGame> getByDeveloper(final String developer) {
@@ -76,7 +76,7 @@ public class VideoGameRepository {
         return list;
     }
 
-    public Optional<Pair<Genre, Integer>> getFavouriteGenre() {
+    public Pair<Genre, Integer> getFavouriteGenre() {
         final Map<Genre, Integer> count = new HashMap<>();
         for (VideoGame videoGame : this.videoGames) {
             for (Genre genre : videoGame.genres()) {
@@ -95,7 +95,7 @@ public class VideoGameRepository {
                 favGenre = entry.getKey();
             }
         }
-        return Optional.of(Pair.of(favGenre, maxOccurrences));
+        return Pair.of(favGenre, maxOccurrences);
     }
 
     public List<VideoGame> getByPlatform(final String platform) {
@@ -179,7 +179,7 @@ public class VideoGameRepository {
         return Duration.ofMillis(TimeUnit.HOURS.toMillis(totalHours) / gamesCount);
     }
 
-    public Optional<VideoGame> getShortestGame() {
+    public VideoGame getShortestGame() {
         int minEstimatedHours = -1;
         VideoGame result = null;
         for (VideoGame videoGame : this.videoGames) {
@@ -188,7 +188,7 @@ public class VideoGameRepository {
                 minEstimatedHours = videoGame.estimatedHours();
             }
         }
-        return Optional.ofNullable(result);
+        return result;
     }
 
     public Map<String, Integer> getMostNominatedGames(final int limit) {
@@ -215,7 +215,7 @@ public class VideoGameRepository {
         return mostNominated;
     }
 
-    public Optional<Pair<String, Integer>> getMostAwardedGame() {
+    public Pair<String, Integer> getMostAwardedGame() {
         int maxAwards = 0;
         VideoGame result = null;
         for (VideoGame videoGame : this.videoGames) {
@@ -232,10 +232,10 @@ public class VideoGameRepository {
                 }
             }
         }
-        return Optional.of(Pair.of(result.title(), maxAwards));
+        return Pair.of(result.title(), maxAwards);
     }
 
-    public Optional<Pair<String, Integer>> getMostAwardedGameByAwardLabel(final String awardLabel) {
+    public Pair<String, Integer> getMostAwardedGameByAwardLabel(final String awardLabel) {
         int maxAwards = 0;
         VideoGame result = null;
         for (VideoGame videoGame : this.videoGames) {
@@ -252,10 +252,10 @@ public class VideoGameRepository {
                 }
             }
         }
-        return Optional.of(Pair.of(result.title(), maxAwards));
+        return Pair.of(result.title(), maxAwards);
     }
 
-    public Optional<VideoGame> getOldestMultiplayerToWinAnAward() {
+    public VideoGame getOldestMultiplayerToWinAnAward() {
         int minWinnerYear = -1;
         VideoGame result = null;
 
@@ -270,7 +270,7 @@ public class VideoGameRepository {
                 }
             }
         }
-        return Optional.ofNullable(result);
+        return result;
     }
 
     public List<VideoGame> getMultiplayerGames() {
