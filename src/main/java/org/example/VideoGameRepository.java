@@ -265,6 +265,7 @@ public class VideoGameRepository {
                     if (nomination.won() && (minWinnerYear < 0 || videoGame.releaseDate().getYear() < minWinnerYear) && videoGame.multiplayer()) {
                         minWinnerYear = videoGame.releaseDate().getYear();
                         result = videoGame;
+                        break;
                     }
                 }
             }
