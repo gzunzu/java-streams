@@ -13,10 +13,10 @@ name: "Basic master branch pipeline"
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "feature/declarative-programming-solution", "feature/imperative-programming-solution"]
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ "master" ]
+    branches: [ "master", "feature/declarative-programming-solution", "feature/imperative-programming-solution"]
   schedule:
     - cron: '37 2 * * 0'
 
@@ -43,7 +43,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up JDK 19
+      - name: Set up JDK 16
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
@@ -81,7 +81,7 @@ jobs:
 
       # Runs a sample execution of the application.
       - name: Run sample execution with Maven
-        run: mvn verify -Dexec.mainClass=app.Application
+        run: mvn verify -Dexec.mainClass=example.Application
 
       # - name: Perform CodeQL Analysis
       #  uses: github/codeql-action/analyze@v2
