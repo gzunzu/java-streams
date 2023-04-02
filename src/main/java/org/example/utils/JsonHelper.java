@@ -38,8 +38,8 @@ public abstract class JsonHelper {
         try {
             return MAPPER.readValue(new File(filePath),
                     MAPPER.getTypeFactory().constructCollectionType(List.class, clazz));
-        } catch (IOException nsfe) {
-            log.error(nsfe.getMessage());
+        } catch (IOException ioe) {
+            log.error(ioe.getMessage());
         }
         return Collections.emptyList();
     }
