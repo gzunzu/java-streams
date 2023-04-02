@@ -1,24 +1,18 @@
 package org.example;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.example.utils.MappingUtils;
 import org.springframework.stereotype.Repository;
 
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.ToIntFunction;
-import java.util.function.ToLongFunction;
-import java.util.stream.Collectors;
 
 @Repository
 public class VideoGameRepository {
@@ -42,187 +36,249 @@ public class VideoGameRepository {
     }
 
     public Optional<VideoGame> getByTitle(String title) {
-        Predicate<VideoGame> titlePredicate = videoGame -> title.equalsIgnoreCase(videoGame.title());
-
-        return CollectionUtils.emptyIfNull(this.videoGames).stream()
-                .filter(titlePredicate)
-                .findFirst();
+        VideoGame result = null;
+        for (VideoGame videoGame : this.videoGames) {
+            if (title.equalsIgnoreCase(videoGame.title())) {
+                result = videoGame;
+                break;
+            }
+        }
+        return Optional.ofNullable(result);
     }
 
     public List<VideoGame> getByDeveloper(final String developer) {
-        Predicate<VideoGame> sameDeveloper = videoGame -> developer.equalsIgnoreCase(videoGame.developer());
-
-        return CollectionUtils.emptyIfNull(this.videoGames).stream()
-                .filter(sameDeveloper)
-                .collect(Collectors.toList());
+        final List<VideoGame> list = new ArrayList<>();
+        for (VideoGame videoGame : this.videoGames) {
+            if (developer.equalsIgnoreCase(videoGame.developer())) {
+                list.add(videoGame);
+            }
+        }
+        return list;
     }
 
     public List<VideoGame> getByGenreAndDeveloper(final Genre genre, final String developer) {
-        Predicate<VideoGame> sameDeveloper = videoGame -> developer.equalsIgnoreCase(videoGame.developer());
-        Predicate<VideoGame> sameGenre = videoGame -> CollectionUtils.emptyIfNull(videoGame.genres()).stream()
-                .anyMatch(genre::equals);
-
-        return CollectionUtils.emptyIfNull(this.videoGames).stream()
-                .filter(sameDeveloper.and(sameGenre))
-                .collect(Collectors.toList());
+        final List<VideoGame> list = new ArrayList<>();
+        for (VideoGame videoGame : this.videoGames) {
+            if (developer.equalsIgnoreCase(videoGame.developer()) && videoGame.genres().contains(genre)) {
+                list.add(videoGame);
+            }
+        }
+        return list;
     }
 
     public List<VideoGame> getByGenre(final Genre genre) {
-        Predicate<VideoGame> sameGenre = videoGame -> CollectionUtils.emptyIfNull(videoGame.genres()).stream()
-                .anyMatch(genre::equals);
-
-        return CollectionUtils.emptyIfNull(this.videoGames).stream()
-                .filter(sameGenre)
-                .collect(Collectors.toList());
+        final List<VideoGame> list = new ArrayList<>();
+        for (VideoGame videoGame : this.videoGames) {
+            if (videoGame.genres().contains(genre)) {
+                list.add(videoGame);
+            }
+        }
+        return list;
     }
 
-    public Optional<Pair<Genre, Long>> getFavouriteGenre() {
-        return CollectionUtils.emptyIfNull(this.videoGames).stream()
-                .map(VideoGame::genres)
-                .flatMap(Set::stream)
-                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-                .entrySet()
-                .stream()
-                .max(Map.Entry.comparingByValue())
-                .map(MappingUtils.mapEntryToPair());
+    public Optional<Pair<Genre, Integer>> getFavouriteGenre() {
+        final Map<Genre, Integer> count = new HashMap<>();
+        for (VideoGame videoGame : this.videoGames) {
+            for (Genre genre : videoGame.genres()) {
+                if (count.containsKey(genre)) {
+                    count.put(genre, count.get(genre) + 1);
+                } else {
+                    count.put(genre, 1);
+                }
+            }
+        }
+        int maxOccurrences = 0;
+        Genre favGenre = null;
+        for (Map.Entry<Genre, Integer> entry : count.entrySet()) {
+            if (entry.getValue() > maxOccurrences) {
+                maxOccurrences = entry.getValue();
+                favGenre = entry.getKey();
+            }
+        }
+        return Optional.of(Pair.of(favGenre, maxOccurrences));
     }
 
     public List<VideoGame> getByPlatform(final String platform) {
-        Predicate<VideoGame> samePlatform = videoGame -> CollectionUtils.emptyIfNull(videoGame.platforms()).stream()
-                .anyMatch(platform::equalsIgnoreCase);
-
-        return CollectionUtils.emptyIfNull(this.videoGames).stream()
-                .filter(samePlatform)
-                .collect(Collectors.toList());
+        final List<VideoGame> list = new ArrayList<>();
+        for (VideoGame videoGame : this.videoGames) {
+            if (videoGame.platforms().contains(platform)) {
+                list.add(videoGame);
+            }
+        }
+        return list;
     }
 
     public List<VideoGame> getByReleaseYear(final int year) {
-        Predicate<VideoGame> yearPredicate = videoGame -> videoGame.releaseDate().getYear() == year;
-
-        return CollectionUtils.emptyIfNull(this.videoGames).stream()
-                .filter(yearPredicate)
-                .collect(Collectors.toList());
+        final List<VideoGame> list = new ArrayList<>();
+        for (VideoGame videoGame : this.videoGames) {
+            if (videoGame.releaseDate().getYear() == year) {
+                list.add(videoGame);
+            }
+        }
+        return list;
     }
 
     public List<VideoGame> getReleasedBeforeYear(final int year) {
-        Predicate<VideoGame> yearPredicate = videoGame -> videoGame.releaseDate().getYear() <= year;
-
-        return CollectionUtils.emptyIfNull(this.videoGames).stream()
-                .filter(yearPredicate)
-                .collect(Collectors.toList());
+        final List<VideoGame> list = new ArrayList<>();
+        for (VideoGame videoGame : this.videoGames) {
+            if (videoGame.releaseDate().getYear() < year) {
+                list.add(videoGame);
+            }
+        }
+        return list;
     }
 
     public List<VideoGame> getReleasedBeforeOrAfter(final int beforeYear, final int afterYear) {
-        Predicate<VideoGame> releaseYearBeforeYear = videoGame -> videoGame.releaseDate().getYear() < beforeYear;
-        Predicate<VideoGame> releaseYearAfterYear = videoGame -> videoGame.releaseDate().getYear() >= afterYear;
-
-        return CollectionUtils.emptyIfNull(this.videoGames).stream()
-                .filter(releaseYearBeforeYear.or(releaseYearAfterYear))
-                .collect(Collectors.toList());
+        final List<VideoGame> list = new ArrayList<>();
+        for (VideoGame videoGame : this.videoGames) {
+            if (videoGame.releaseDate().getYear() < beforeYear || videoGame.releaseDate().getYear() >= afterYear) {
+                list.add(videoGame);
+            }
+        }
+        return list;
     }
 
-    public Pair<Long, List<String>> getLessCommonPlatforms() {
-        Optional<Long> minPlatformOccurrences = CollectionUtils.emptyIfNull(this.videoGames).stream()
-                .map(VideoGame::platforms)
-                .flatMap(Set::stream)
-                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-                .values()
-                .stream()
-                .min(Comparator.naturalOrder());
+    public Pair<Integer, Set<String>> getLessCommonPlatforms() {
+        final Map<String, Integer> platformCount = new HashMap<>();
+        int minOccurrences = -1;
+        Set<String> platforms = new HashSet<>();
 
-        List<String> lessUsedPlatforms = minPlatformOccurrences.isEmpty() ? Collections.emptyList() :
-                CollectionUtils.emptyIfNull(this.videoGames).stream()
-                        .map(VideoGame::platforms)
-                        .flatMap(Set::stream)
-                        .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-                        .entrySet()
-                        .stream()
-                        .filter(entry -> entry.getValue().equals(minPlatformOccurrences.get()))
-                        .map(Map.Entry::getKey)
-                        .sorted()
-                        .toList();
+        for (VideoGame videoGame : this.videoGames) {
+            for (String platform : videoGame.platforms()) {
+                if (platformCount.containsKey(platform)) {
+                    platformCount.put(platform, platformCount.get(platform) + 1);
+                } else {
+                    platformCount.put(platform, 1);
+                }
+            }
+        }
 
-        return minPlatformOccurrences.map(aLong -> Pair.of(aLong, lessUsedPlatforms))
-                .orElseGet(() -> Pair.of(0L, Collections.emptyList()));
+        for (Map.Entry<String, Integer> entry : platformCount.entrySet()) {
+            if (minOccurrences < 0) {
+                minOccurrences = entry.getValue();
+                platforms.add(entry.getKey());
+            } else if (entry.getValue() == minOccurrences) {
+                platforms.add(entry.getKey());
+            } else if (entry.getValue() < minOccurrences) {
+                minOccurrences = entry.getValue();
+                platforms.clear();
+                platforms.add(entry.getKey());
+            }
+        }
+        return Pair.of(minOccurrences, platforms);
     }
 
     public Duration getAveragePlayingTime() {
-        return CollectionUtils.emptyIfNull(this.videoGames).stream()
-                .map(VideoGame::estimatedHours)
-                .mapToLong(TimeUnit.HOURS::toMillis)
-                .average()
-                .stream()
-                .mapToObj(average -> Duration.ofMillis((long) average))
-                .findFirst()
-                .orElse(Duration.ZERO);
+        int gamesCount = 0;
+        int totalHours = 0;
+        for (VideoGame videoGame : this.videoGames) {
+            gamesCount++;
+            totalHours += videoGame.estimatedHours();
+        }
+
+        return Duration.ofMillis(TimeUnit.HOURS.toMillis(totalHours) / gamesCount);
     }
 
     public Optional<VideoGame> getShortestGame() {
-        return CollectionUtils.emptyIfNull(this.videoGames).stream()
-                .min(Comparator.comparing(VideoGame::estimatedHours));
+        int minEstimatedHours = -1;
+        VideoGame result = null;
+        for (VideoGame videoGame : this.videoGames) {
+            if (minEstimatedHours < 0 || videoGame.estimatedHours() < minEstimatedHours) {
+                result = videoGame;
+                minEstimatedHours = videoGame.estimatedHours();
+            }
+        }
+        return Optional.ofNullable(result);
     }
 
     public Map<String, Integer> getMostNominatedGames(final int limit) {
-        Predicate<VideoGame> nominated = vg -> CollectionUtils.isNotEmpty(vg.nominations());
-        ToIntFunction<VideoGame> nominationsCount = vg -> vg.nominations().size();
+        Map<String, Integer> nominated = new HashMap<>();
+        List<Integer> topNominations = new ArrayList<>();
+        Map<String, Integer> mostNominated = new HashMap<>();
 
-        return CollectionUtils.emptyIfNull(this.videoGames).stream()
-                .filter(nominated)
-                .collect(Collectors.groupingBy(VideoGame::title, Collectors.summingInt(nominationsCount)))
-                .entrySet()
-                .stream()
-                .sorted(Collections.reverseOrder(Comparator.comparingLong(Map.Entry::getValue)))
-                .limit(limit)
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        for (VideoGame videoGame : this.videoGames) {
+            if (videoGame.nominations() != null) {
+                nominated.put(videoGame.title(), videoGame.nominations().size());
+                topNominations.add(videoGame.nominations().size());
+            }
+        }
+        topNominations.sort(Comparator.naturalOrder());
+        topNominations.sort(Comparator.reverseOrder());
+
+        for (Map.Entry<String, Integer> entry : nominated.entrySet()) {
+            for (int i = 0; i < limit; i++) {
+                if (topNominations.get(i) != null && topNominations.get(i).equals(entry.getValue())) {
+                    mostNominated.put(entry.getKey(), entry.getValue());
+                }
+            }
+        }
+        return mostNominated;
     }
 
-    public Optional<Pair<String, Long>> getMostAwardedGame() {
-        Predicate<VideoGame> awarded = vg -> CollectionUtils.emptyIfNull(vg.nominations()).stream()
-                .anyMatch(Nomination::won);
-        ToLongFunction<VideoGame> wins = vg -> vg.nominations().stream()
-                .filter(Nomination::won)
-                .count();
-
-        return CollectionUtils.emptyIfNull(this.videoGames).stream()
-                .filter(awarded)
-                .collect(Collectors.groupingBy(VideoGame::title, Collectors.summingLong(wins)))
-                .entrySet()
-                .stream()
-                .max(Map.Entry.comparingByValue())
-                .map(MappingUtils.mapEntryToPair());
+    public Optional<Pair<String, Integer>> getMostAwardedGame() {
+        int maxAwards = 0;
+        VideoGame result = null;
+        for (VideoGame videoGame : this.videoGames) {
+            if (videoGame.nominations() != null) {
+                int awardsCount = 0;
+                for (Nomination nomination : videoGame.nominations()) {
+                    if (nomination.won()) {
+                        awardsCount++;
+                    }
+                }
+                if (awardsCount > maxAwards) {
+                    maxAwards = awardsCount;
+                    result = videoGame;
+                }
+            }
+        }
+        return Optional.of(Pair.of(result.title(), maxAwards));
     }
 
-    public Optional<Pair<String, Long>> getMostAwardedGameByAwardLabel(final String awardLabel) {
-        Predicate<VideoGame> awarded = vg -> CollectionUtils.emptyIfNull(vg.nominations()).stream()
-                .anyMatch(Nomination::won);
-        Predicate<Nomination> awardedByLabel = nomination -> awardLabel.equalsIgnoreCase(nomination.awards());
-        ToLongFunction<VideoGame> winsByAwardLabel = vg -> vg.nominations().stream()
-                .filter(awardedByLabel)
-                .filter(Nomination::won)
-                .count();
-
-        return CollectionUtils.emptyIfNull(this.videoGames).stream()
-                .filter(awarded)
-                .collect(Collectors.groupingBy(VideoGame::title, Collectors.summingLong(winsByAwardLabel)))
-                .entrySet()
-                .stream()
-                .max(Map.Entry.comparingByValue())
-                .map(MappingUtils.mapEntryToPair());
+    public Optional<Pair<String, Integer>> getMostAwardedGameByAwardLabel(final String awardLabel) {
+        int maxAwards = 0;
+        VideoGame result = null;
+        for (VideoGame videoGame : this.videoGames) {
+            if (videoGame.nominations() != null) {
+                int awardsCount = 0;
+                for (Nomination nomination : videoGame.nominations()) {
+                    if (nomination.won() && awardLabel.equalsIgnoreCase(nomination.awards())) {
+                        awardsCount++;
+                    }
+                }
+                if (awardsCount > maxAwards) {
+                    maxAwards = awardsCount;
+                    result = videoGame;
+                }
+            }
+        }
+        return Optional.of(Pair.of(result.title(), maxAwards));
     }
 
     public Optional<VideoGame> getOldestMultiplayerToWinAnAward() {
-        Predicate<VideoGame> awardWinner = videoGame -> CollectionUtils.emptyIfNull(videoGame.nominations()).stream()
-                .anyMatch(Nomination::won);
+        int minWinnerYear = -1;
+        VideoGame result = null;
 
-        return CollectionUtils.emptyIfNull(this.videoGames).stream()
-                .filter(VideoGame::multiplayer)
-                .filter(awardWinner)
-                .min(Comparator.comparingInt(videoGame -> videoGame.releaseDate().getYear()));
+        for (VideoGame videoGame : this.videoGames) {
+            if (videoGame.nominations() != null) {
+                for (Nomination nomination : videoGame.nominations()) {
+                    if (nomination.won() && (minWinnerYear < 0 || videoGame.releaseDate().getYear() < minWinnerYear) && videoGame.multiplayer()) {
+                        minWinnerYear = videoGame.releaseDate().getYear();
+                        result = videoGame;
+                    }
+                }
+            }
+        }
+        return Optional.ofNullable(result);
     }
 
     public List<VideoGame> getMultiplayerGames() {
-        return CollectionUtils.emptyIfNull(this.videoGames).stream()
-                .filter(VideoGame::multiplayer)
-                .collect(Collectors.toList());
+        final List<VideoGame> list = new ArrayList<>();
+        for (VideoGame videoGame : this.videoGames) {
+            if (videoGame.multiplayer()) {
+                list.add(videoGame);
+            }
+        }
+        return list;
     }
 }

@@ -41,7 +41,7 @@
     "developer": "Ubisoft",
     "platforms": [
       "PlayStation 4",
-      "XBox One",
+      "Xbox One",
       "Microsoft Windows",
       "Google Stadia"
     ],
@@ -82,7 +82,7 @@
     "developer": "Ubisoft",
     "platforms": [
       "PlayStation 4",
-      "XBox One",
+      "Xbox One",
       "Microsoft Windows",
       "Google Stadia"
     ],
@@ -133,7 +133,7 @@
     "developer": "Rocksteady Studios",
     "platforms": [
       "PlayStation 4",
-      "XBox One",
+      "Xbox One",
       "Microsoft Windows"
     ],
     "genres": [
@@ -203,7 +203,7 @@
     "developer": "Sierra Studios",
     "platforms": [
       "Microsoft Windows",
-      "XBox"
+      "Xbox"
     ],
     "genres": [
       "SHOOTER"
@@ -349,7 +349,7 @@
     "developer": "Square Enix",
     "platforms": [
       "PlayStation 4",
-      "XBox One",
+      "Xbox One",
       "Microsoft Windows",
       "Google Stadia"
     ],
@@ -383,7 +383,7 @@
     "developer": "Square Enix",
     "platforms": [
       "PlayStation 4",
-      "XBox One",
+      "Xbox One",
       "Linux",
       "Mac OS",
       "Microsoft Windows",
@@ -621,7 +621,7 @@
     "developer": "Namco",
     "platforms": [
       "PlayStation 4",
-      "XBox One",
+      "Xbox One",
       "Nintendo switch",
       "Android",
       "Google Stadia",
@@ -734,8 +734,8 @@
     "platforms": [
       "PlayStation 4",
       "PlayStation 3",
-      "XBox One",
-      "XBox 360",
+      "Xbox One",
+      "Xbox 360",
       "Microsoft Windows",
       "Linux",
       "Mac OS"
@@ -842,7 +842,7 @@
     "platforms": [
       "PlayStation X",
       "PlayStation 2",
-      "XBox"
+      "Xbox"
     ],
     "genres": [
       "SPORTS"
@@ -897,7 +897,7 @@
     "developer": "Rockstar",
     "platforms": [
       "PlayStation 4",
-      "XBox One",
+      "Xbox One",
       "Microsoft Windows",
       "Google Stadia"
     ],
@@ -1015,7 +1015,7 @@
     "title": "Star Wars Knights of the Old Republic II: The Sith Lords",
     "developer": "Obsidian Entertainment",
     "platforms": [
-      "XBox",
+      "Xbox",
       "Microsoft Windows",
       "Linux",
       "Mac OS",
@@ -1113,7 +1113,7 @@
     "developer": "Electronic Arts",
     "platforms": [
       "PlayStation 2",
-      "XBox",
+      "Xbox",
       "GameBoy Advance",
       "GameCube"
     ],
@@ -1143,7 +1143,7 @@
       "Windows Phone",
       "iOS",
       "PlayStation 3",
-      "XBox 360",
+      "Xbox 360",
       "Nintendo DS",
       "N-Gage 2.0",
       "Wii",
@@ -1271,7 +1271,7 @@
       "GameBoy Advance",
       "GameCube",
       "Nintendo 64",
-      "XBox",
+      "Xbox",
       "Microsoft Windows",
       "Mac OS"
     ],
@@ -1295,8 +1295,8 @@
     "platforms": [
       "PlayStation 4",
       "PlayStation 3",
-      "XBox One",
-      "XBox 360",
+      "Xbox One",
+      "Xbox 360",
       "Microsoft Windows"
     ],
     "genres": [
