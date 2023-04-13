@@ -1,5 +1,7 @@
 package org.example.utils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -9,6 +11,7 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TextUtils {
 
     public static <T> String getAsPrettyString(final Collection<T> collection) {
